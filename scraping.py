@@ -20,6 +20,7 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
+        "hemispheres": hemispheres(browser),
         "last_modified": dt.datetime.now()
     }
 
@@ -111,6 +112,28 @@ def mars_facts():
     #10.3.5 - Transform the pandas df back into HTML
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html()
+
+def hemispheres(browser):
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+
+    hemisphere_image_urls = []
+    for i in range(4):
+    # Create empty dictionary
+        hemispheres = {}
+        browser.find_by_css("a.product-item h3")[i].click()
+        element = browser.find_link_by_text('Sample').first
+        img_url = element['href']
+        title = browser.find_by_css('h2.title').text
+        hemispheres['img_url'] = img_url
+        hemispheres['title'] = title
+        # Append hemisphere object to list
+        hemisphere_image_urls.append(hemispheres)
+        # Finally, we navigate backwards
+        browser.back()
+    return hemisphere_image_urls
+
+
 
 if __name__ == "__main__":
 
